@@ -30,7 +30,7 @@ namespace StoreFront.Models
 
         public List<Item> GetAlchemyItems()
         {
-            return Items.Where(i => i.Name.StartsWith("Alchemy")).ToList();
+            return Items.Where(i => i.Name.StartsWith(Constants.ALCHEMY)).ToList();
         }
 
         public void AddItem(Item item)
@@ -47,89 +47,9 @@ namespace StoreFront.Models
         //This takes the Items array and updates the values
         private void UpdateWorth()
         {
-            for (var i = 0; i < Items.Count; i++)
+            foreach (var item in Items)
             {
-                int decrementor = 1;
-                int maxWorth = 50;
-                bool alchemyItem = false;
-
-                if (Items[i].Name.StartsWith("Alchemy"))
-                {
-                    alchemyItem = true;
-                    decrementor = 2;
-                    maxWorth = 100;
-                    Items[i].Name = Items[i].Name.Replace("Alchemy", "").Trim();
-                }
-
-                if (Items[i].Name != "Gold" && Items[i].Name != "Helium")
-                {
-                    if (Items[i].Worth > 0)
-                    {
-                        if (Items[i].Name != "Cadmium")
-                        {
-                            Items[i].Worth = Items[i].Worth - decrementor;
-                        }
-                    }
-                }
-                else
-                {
-                    if (Items[i].Worth < maxWorth)
-                    {
-                        Items[i].Worth = Items[i].Worth + 1;
-
-                        if (Items[i].Name == "Helium")
-                        {
-                            if (Items[i].ShelfLife < 11)
-                            {
-                                if (Items[i].Worth < maxWorth)
-                                {
-                                    Items[i].Worth = Items[i].Worth + 1;
-                                }
-                            }
-
-                            if (Items[i].ShelfLife < 6)
-                            {
-                                if (Items[i].Worth < maxWorth)
-                                {
-                                    Items[i].Worth = Items[i].Worth + 1;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if (Items[i].Name != "Cadmium")
-                {
-                    Items[i].ShelfLife = Items[i].ShelfLife - 1;
-                }
-
-                if (Items[i].ShelfLife < 0)
-                {
-                    if (Items[i].Name != "Gold")
-                    {
-                        if (Items[i].Name != "Helium")
-                        {
-                            if (Items[i].Worth > 0)
-                            {
-                                if (Items[i].Name != "Cadmium")
-                                {
-                                    Items[i].Worth = Items[i].Worth - decrementor;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            Items[i].Worth = Items[i].Worth - Items[i].Worth;
-                        }
-                    }
-                    else
-                    {
-                        if (Items[i].Worth < maxWorth)
-                        {
-                            Items[i].Worth = Items[i].Worth + 1;
-                        }
-                    }
-                }
+                item.RunDailyUpdate();
             }
         }
     }

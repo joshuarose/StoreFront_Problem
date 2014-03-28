@@ -164,6 +164,8 @@ namespace StoreFront.Tests
         [Test]
         public void Alchemy_Items_Have_Max_Worth_Of_OneHundred()
         {
+            //This may be cheating as the requirements state not to change the item or items code
+            //If this is the case we could overload the store constructor to take in a mock item array
             var alchemyGold = new Item() {Name = "Alchemy Gold", Worth = 50, ShelfLife = 3};
             StoreUnderTest.AddItem(alchemyGold);
             StoreUnderTest.RunEndOfDay();
